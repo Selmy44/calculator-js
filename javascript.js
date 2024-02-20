@@ -1,31 +1,19 @@
-function add() {
-  var num1 = parseFloat(document.getElementById('num1').value);
-  var num2 = parseFloat(document.getElementById('num2').value);
-  var result = num1 + num2;
-  document.getElementById('result').innerHTML = 'Result: ' + result;
-}
 
-function subtract() {
-  var num1 = parseFloat(document.getElementById('num1').value);
-  var num2 = parseFloat(document.getElementById('num2').value);
-  var result = num1 - num2;
-  document.getElementById('result').innerHTML = 'Result: ' + result;
-}
+        function appendToDisplay(value) {
+            document.getElementById('display').value += value;
+        }
 
-function multiply() {
-  var num1 = parseFloat(document.getElementById('num1').value);
-  var num2 = parseFloat(document.getElementById('num2').value);
-  var result = num1 * num2;
-  document.getElementById('result').innerHTML = 'Result: ' + result;
-}
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+        }
 
-function divide() {
-  var num1 = parseFloat(document.getElementById('num1').value);
-  var num2 = parseFloat(document.getElementById('num2').value);
-  if (num2 === 0) {
-    document.getElementById('result').innerHTML = 'Cannot divide by zero';
-  } else {
-    var result = num1 / num2;
-    document.getElementById('result').innerHTML = 'Result: ' + result;
-  }
-}
+        function calculate() {
+            var displayValue = document.getElementById('display').value;
+
+            try {
+                var result = eval(displayValue);
+                document.getElementById('display').value = result;
+            } catch (error) {
+                document.getElementById('display').value = 'Error';
+            }
+        }
