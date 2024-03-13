@@ -23,7 +23,7 @@
         cars[0] = "Toyota";
 
         // Add an element:
-        cars.push("Audi");J
+        cars.push("Audi");
 
         // Display the Array:
         document.getElementById("demo1").innerHTML = cars;
