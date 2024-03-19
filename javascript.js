@@ -1,6 +1,19 @@
-function TheBaddest(){
-    let a=5;
-    let b=5;
-    let c=a+b;
-    document.getElementById("moza").innerHTML= c;
-}
+
+        function appendToDisplay(value) {
+            document.getElementById('display').value += value;
+        }
+
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+        }
+
+        function calculate() {
+            var displayValue = document.getElementById('display').value;
+
+            try {
+                var result = eval(displayValue);
+                document.getElementById('display').value = result;
+            } catch (error) {
+                document.getElementById('display').value = 'Error';
+            }
+        }

@@ -17,13 +17,13 @@
         }
 
         // Create an Array:
-        const cars = ["Saab", "Volvo", "BMW"];
+        const cars = ["Volvo","Audi","BMW"];
 
         // Change an element:
         cars[0] = "Toyota";
 
         // Add an element:
-        cars.push("Audi");
+        cars.push("Lamborghini");
 
         // Display the Array:
         document.getElementById("demo1").innerHTML = cars;
@@ -38,7 +38,7 @@
         car.owner = "Nshuti";
 
         // Display the property:
-        document.getElementById("demo2").innerHTML = "Car owner is " + car.owner; 
+        document.getElementById("demo2").innerHTML = "The owner of the car " + car.owner; 
 
         let text1 = "D";
         let text2 = "E";
