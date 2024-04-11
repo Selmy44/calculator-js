@@ -28,7 +28,7 @@
           
           let value = toCelsius(77);
           document.getElementById("well1").innerHTML = value;
-          //The End of Functions
+        //The End of Functions
 
         // Create an Array:
         const cars = ["Saab", "Volvo", "BMW"];
