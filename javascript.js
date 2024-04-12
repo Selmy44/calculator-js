@@ -20,6 +20,4 @@ function toCelsius(f) {
   
   let value = toCelsius(77);
   document.getElementById("well1").innerHTML = value;
-
-
   
