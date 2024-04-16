@@ -43,7 +43,7 @@
         document.getElementById("demo1").innerHTML = cars;
 
         // Create an object:
-        const car = {type:"Fiat", model:"500", color:"white"};
+        const car = {type:"Lamborghini", model:"Aventador", color:"white"};
 
         // Change a property:
         car.color = "red";
@@ -52,7 +52,7 @@
         car.owner = "Nshuti";
 
         // Display the property:
-        document.getElementById("demo2").innerHTML = "Car owner is " + car.owner; 
+        document.getElementById("demo2").innerHTML = car["type"] + " " + car.model + " was sold to " + car.owner; 
 
         let text1 = "D";
         let text2 = "E";
