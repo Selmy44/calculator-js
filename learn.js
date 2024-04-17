@@ -21,11 +21,11 @@
         }
         let x = good(3);
         document.getElementById("well").innerHTML= x;
-
+        
         function toCelsius(f) {
             return (5/9) * (f-32);
           }
-          
+      
           let value = toCelsius(77);
           document.getElementById("well1").innerHTML = value;
         //The End of Functions
