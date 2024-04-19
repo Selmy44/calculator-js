@@ -25,7 +25,7 @@
         function toCelsius(f) {
             return (5/9) * (f-32);
           }
-      
+     
           let value = toCelsius(77);
           document.getElementById("well1").innerHTML = value;
         //The End of Functions
@@ -58,3 +58,6 @@
         let text2 = "E";
         let result = text1 < text2;
         document.getElementById("demo3").innerHTML= "Is D greater than E?  " + result;
+
+        let bob="hheelloo"
+        document.getElementById("one").innerHTML=bob.length;
