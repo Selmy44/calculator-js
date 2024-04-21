@@ -9,9 +9,9 @@
             const a = 5;  // use const if the value or type(Arrays & objects) should not be changed 
             let b = 5;    // use let if you can't use const, Variables declared with let have Block Scope, Variables declared with let must be Declared before use, Variables declared with let cannot be Redeclared in the same scope
             var c = a + b;  // use var if you must support old browsers
-            const answer= "The answer is true"
+            const answer= 'The answer is true'
             let palma3;
-            document.getElementById("palma1").innerHTML= "The addition of \"5+5\" is :" +c;
+            document.getElementById("palma1").innerHTML= "The addition of 5+5 is :" +c;
             document.getElementById("palma2").innerHTML= answer;
             document.getElementById("palma4").innerHTML= palma3;
         }
@@ -32,15 +32,18 @@
 
         // Create an Array:
         const cars = ["Saab", "Volvo", "BMW"];
+        const names = ["Nshuti, Selmy, Souleiman"];
+        const owner = cars.concat(names);
 
         // Change an element:
         cars[0] = "Toyota";
 
-        // Add an element:
+        // Push adds an element:  the same as unshift !!
         cars.push("Audi");
 
         // Display the Array:
         document.getElementById("demo1").innerHTML = cars;
+        document.getElementById("miami").innerHTML = owner;
 
         // Create an object:
         const car = {type:"Lamborghini", model:"Aventador", color:"white"};
@@ -61,3 +64,14 @@
 
         let bob="hheelloo"
         document.getElementById("one").innerHTML=bob.length;
+
+        let header = "Available cars";
+        let tags = ["Lamborghini","Rolls Royce","Ferrari"];
+        let demo = "<h1>${header}</h1><ol>";
+        for (const x of tags) {
+            demo += '<li>${x}</li>';
+        }
+        demo += '</ol>';
+        document.getElementById("fuck").innerHTML= demo;
+
+      
