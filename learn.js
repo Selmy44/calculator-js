@@ -11,7 +11,7 @@
             var c = a + b;  // use var if you must support old browsers
             const answer= "The answer is true"
             let palma3;
-            document.getElementById("palma1").innerHTML= "The addition of 5+5 is :" +c;
+            document.getElementById("palma1").innerHTML= "The addition of \"5+5\" is :" +c;
             document.getElementById("palma2").innerHTML= answer;
             document.getElementById("palma4").innerHTML= palma3;
         }
