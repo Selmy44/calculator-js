@@ -15,6 +15,10 @@
             document.getElementById("palma2").innerHTML= answer;
             document.getElementById("palma4").innerHTML= palma3;
         }
+        function displayDate() {
+            const d = new Date();
+            document.getElementById("miami2").innerHTML = d;
+        }
         //The Functions
         function good(a){
             return (3) * a;
@@ -73,5 +77,9 @@
         }
         demo += '</ol>';
         document.getElementById("fuck").innerHTML= demo;
+
+        const d = new Date();
+        document.getElementById("miami2").innerHTML = d;
+
 
       
