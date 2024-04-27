@@ -81,5 +81,23 @@
         const d = new Date();
         document.getElementById("miami2").innerHTML = d;
 
+        function logics() {
+            let x = 6;
+            let y = 4;
+            document.getElementById("miami3").innerHTML = !(x === y) + "<br>" + !(x > y);
+        }
+
+        function conditions() {
+            let voteable;
+            let age = Number(document.getElementById("age").value);
+            if (isNaN(age)) {
+                voteable = "Input is not a number";
+            }
+            else {
+                volteabe (age < 18)? "Too young" : "Old enought";
+            }
+            document.getElementById("miami4").innerHTML = voteable + "To vote";
+        }
+
 
       
