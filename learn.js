@@ -19,6 +19,16 @@
             const d = new Date();
             document.getElementById("miami2").innerHTML = d;
         }
+
+        function test() {
+                        let a = 4;
+                        let b = 5;
+                        let c = a + b;
+                        let d = a - b;
+                        document.getElementById("mamba").innerHTML= c;
+                        document.getElementById("venmo").innerHTML= d;
+                        }
+
         //The Functions
         function good(a){
             return (3) * a;
@@ -85,6 +95,7 @@
             let x = 6;
             let y = 4;
             document.getElementById("miami3").innerHTML = !(x === y) + "<br>" + !(x > y);
+            document.getElementById("montecarlo").innerHTML = !( y === y ) + "<br>" + !(x > y);
         }
 
         function conditions() {
