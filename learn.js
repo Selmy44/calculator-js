@@ -20,14 +20,10 @@
             document.getElementById("miami2").innerHTML = d;
         }
 
-        function test() {
-                        let a = 4;
-                        let b = 5;
-                        let c = a + b;
-                        let d = a - b;
-                        document.getElementById("mamba").innerHTML= c;
-                        document.getElementById("venmo").innerHTML= d;
-                        }
+        function apitest() {
+                    const name = api;
+                    document.getElementById("api").innerHTML = name;
+        }
 
         //The Functions
         function good(a){
