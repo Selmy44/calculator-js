@@ -21,8 +21,9 @@
         }
 
         function apitest() {
-                    const name = api;
+                    const name = apitest;
                     document.getElementById("api").innerHTML = name;
+
         }
 
         //The Functions
