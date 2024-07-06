@@ -32,9 +32,13 @@
         }
         let x = good(3);
         document.getElementById("well").innerHTML= x;
-        const good2=(a)=>{
-                    return a;
-        }
+
+        // const good2=(a)=>{
+        //             return a;
+        // }
+        // const good2=(a)=>{
+        //         return a;
+        // }
         function toCelsius(f) {
             return (5/9) * (f-32);
           }
