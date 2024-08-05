@@ -5,7 +5,7 @@ let x=myFunction(5, 5);
 document.getElementById("demo").innerHTML = x;
 
 
-function.myFunction(a, b){
+function myFunction(a, b){
     // Function returns the product of a and b
     return a * b;
 }
@@ -20,4 +20,4 @@ function toCelsius(f) {
   
   let value = toCelsius(77);
   document.getElementById("well1").innerHTML = value;
-  
+    
