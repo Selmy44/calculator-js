@@ -1,57 +1,25 @@
-// let slideIndex = 0;
-// showSlides(slideIndex);
+const messageInput = document.getElementById("message-input");
+const result = document.getElementById("result");
+const checkMessageButton = document.getElementById("check-message-btn");
 
-// function nextSlide() {
-//     slideIndex++;
-//     showSlides(slideIndex);
-// }
+const helpRegex = /please help|assist me/i;
+const dollarRegex = /[0-9]+\s*(?:hundred|thousand|million|billion)?\s+dollars/i;
+const freeRegex = /(?:^|\s)fr[e3][e3] m[o0]n[e3]y(?:$|\s)/i;
+const stockRegex = /(?:^|\s)[s5][t7][o0][c{[(]k [a@4]l[e3]r[t7](?:$|\s)/i;
+const dearRegex = /(?:^|\s)d[e3][a@4]r fr[1i|][e3]nd(?:$|\s)/i;
 
-// function prevSlide() {
-//     slideIndex--;
-//     showSlides(slideIndex);
-// }
+const denyList = [helpRegex, dollarRegex, freeRegex, stockRegex, dearRegex];
 
-// function showSlides(index) {
-//     const slides = document.querySelectorAll('.slides img');
-//     if (index >= slides.length) {
-//         slideIndex = 0;
-//     }
-//     if (index < 0) {
-//         slideIndex = slides.length - 1;
-//     }
-//     slides.forEach((slide, i) => {
-//         slide.classList.remove('active');
-//         if (i === slideIndex) {
-//             slide.classList.add('active');
-//         }
-//     });
-// }
+const isSpam = (msg) => denyList.some((regex) => regex.test(msg));
 
-const carousel = document.querySelector('.carousel');
-const prev = document.getElementById('prevBtn');
-const next = document.getElementById('nextBtn');
+checkMessageButton.addEventListener("click", () => {
+  if (messageInput.value === "") {
+    alert("Please enter a message.");
+    return;
+  }
 
-let currentIndex = 0;
-
-prev.addEventListener('click', () => {
-    if (currentIndex > 0) {
-        currentIndex--;
-    } else {
-        currentIndex = carousel.children.length - 1;
-    }
-    updateCarousel();
+  result.textContent = isSpam(messageInput.value)
+    ? "Oh no! This looks like a spam message."
+    : "This message does not seem to contain any spam.";
+  messageInput.value = "";
 });
-
-next.addEventListener('click', () => {
-    if (currentIndex < carousel.children.length - 1) {
-        currentIndex++;
-    } else {
-        currentIndex = 0;
-    }
-    updateCarousel();
-});
-
-function updateCarousel() {
-    const offset = -currentIndex * 300;
-    carousel.style.transform = `translateX(${offset}px)`;
-}
