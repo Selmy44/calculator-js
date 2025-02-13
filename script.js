@@ -1,82 +1,134 @@
-let price = 1.87;
-let cid = [
-    ['PENNY', 1.01],
-    ['NICKEL', 2.05],
-    ['DIME', 3.1],
-    ['QUARTER', 4.25],
-    ['ONE', 90],
-    ['FIVE', 55],
-    ['TEN', 20],
-    ['TWENTY', 60],
-    ['ONE HUNDRED', 100]
-];
+const forumLatest = "https://cdn.freecodecamp.org/curriculum/forum-latest/latest.json";
+const forumTopicUrl = "https://forum.freecodecamp.org/t/";
+const forumCategoryUrl = "https://forum.freecodecamp.org/c/";
+const avatarUrl = "https://sea1.discourse-cdn.com/freecodecamp";
 
-const currencyUnit = {
-    "PENNY": 0.01,
-    "NICKEL": 0.05,
-    "DIME": 0.1,
-    "QUARTER": 0.25,
-    "ONE": 1,
-    "FIVE": 5,
-    "TEN": 10,
-    "TWENTY": 20,
-    "ONE HUNDRED": 100
+const postsContainer = document.getElementById("posts-container");
+
+const allCategories = {
+  299: { category: "Career Advice", className: "career" },
+  409: { category: "Project Feedback", className: "feedback" },
+  417: { category: "freeCodeCamp Support", className: "support" },
+  421: { category: "JavaScript", className: "javascript" },
+  423: { category: "HTML - CSS", className: "html-css" },
+  424: { category: "Python", className: "python" },
+  432: { category: "You Can Do This!", className: "motivation" },
+  560: { category: "Backend Development", className: "backend" },
 };
 
-document.getElementById("purchase-btn").addEventListener("click", function () {
-    let cash = parseFloat(document.getElementById("cash").value);
-    let changeDue = cash - price;
-    
-    if (cash < price) {
-        alert("Customer does not have enough money to purchase the item");
-        return;
-    } 
-    
-    if (cash === price) {
-        document.getElementById("change-due").innerText = "No change due - customer paid with exact cash";
-        return;
-    }
+const forumCategory = (id) => {
+  let selectedCategory = {};
 
-    let totalCID = cid.reduce((sum, [_, amount]) => sum + amount, 0);
-    totalCID = parseFloat(totalCID.toFixed(2));
+  if (allCategories.hasOwnProperty(id)) {
+    const { className, category } = allCategories[id];
 
-    if (totalCID < changeDue) {
-        document.getElementById("change-due").innerText = "Status: INSUFFICIENT_FUNDS";
-        return;
-    }
+    selectedCategory.className = className;
+    selectedCategory.category = category;
+  } else {
+    selectedCategory.className = "general";
+    selectedCategory.category = "General";
+    selectedCategory.id = 1;
+  }
+  const url = `${forumCategoryUrl}${selectedCategory.className}/${id}`;
+  const linkText = selectedCategory.category;
+  const linkClass = `category ${selectedCategory.className}`;
 
-    let changeArray = [];
-    let remainingChange = changeDue;
+  return `<a href="${url}" class="${linkClass}" target="_blank">
+    ${linkText}
+  </a>`;
+};
 
-    for (let i = cid.length - 1; i >= 0; i--) {
-        let [unit, amount] = cid[i];
-        let unitValue = currencyUnit[unit];
-        let amountToGive = 0;
+const timeAgo = (time) => {
+  const currentTime = new Date();
+  const lastPost = new Date(time);
 
-        while (remainingChange >= unitValue && amount > 0) {
-            remainingChange -= unitValue;
-            amount -= unitValue;
-            amountToGive += unitValue;
-            remainingChange = parseFloat(remainingChange.toFixed(2));
-        }
+  const timeDifference = currentTime - lastPost;
+  const msPerMinute = 1000 * 60;
 
-        if (amountToGive > 0) {
-            changeArray.push([unit, parseFloat(amountToGive.toFixed(2))]);
-        }
-    }
+  const minutesAgo = Math.floor(timeDifference / msPerMinute);
+  const hoursAgo = Math.floor(minutesAgo / 60);
+  const daysAgo = Math.floor(hoursAgo / 24);
 
-    let totalChangeGiven = changeArray.reduce((sum, [_, amount]) => sum + amount, 0);
-    totalChangeGiven = parseFloat(totalChangeGiven.toFixed(2));
+  if (minutesAgo < 60) {
+    return `${minutesAgo}m ago`;
+  }
 
-    if (totalChangeGiven < changeDue) {
-        document.getElementById("change-due").innerText = "Status: INSUFFICIENT_FUNDS";
-        return;
-    }
+  if (hoursAgo < 24) {
+    return `${hoursAgo}h ago`;
+  }
 
-    if (totalChangeGiven === totalCID) {
-        document.getElementById("change-due").innerText = `Status: CLOSED ${changeArray.map(([unit, amount]) => `${unit}: $${amount}`).join(" ")}`;
-        return;
-    }
+  return `${daysAgo}d ago`;
+};
 
-document.getElementById("change-due").innerText = `Status: OPEN ${changeArray.map(([unit, amount]) => `${unit}: $${amount}`).join(" ")}`;
-});
+const viewCount = (views) => {
+  const thousands = Math.floor(views / 1000);
+
+  if (views >= 1000) {
+    return `${thousands}k`;
+  }
+
+  return views;
+};
+
+const avatars = (posters, users) => {
+  return posters
+    .map((poster) => {
+      const user = users.find((user) => user.id === poster.user_id);
+      if (user) {
+        const avatar = user.avatar_template.replace(/{size}/, 30);
+        const userAvatarUrl = avatar.startsWith("/user_avatar/")
+          ? avatarUrl.concat(avatar)
+          : avatar;
+        return `<img src="${userAvatarUrl}" alt="${user.name}" />`;
+      }
+    })
+    .join("");
+};
+
+const fetchData = async () => {
+  try {
+    const res = await fetch(forumLatest);
+    const data = await res.json();
+    showLatestPosts(data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+fetchData();
+
+const showLatestPosts = (data) => {
+  const { topic_list, users } = data;
+  const { topics } = topic_list;
+
+  postsContainer.innerHTML = topics.map((item) => {
+    const {
+      id,
+      title,
+      views,
+      posts_count,
+      slug,
+      posters,
+      category_id,
+      bumped_at,
+    } = item;
+
+    return `
+    <tr>
+      <td>
+        <a class="post-title">${title}</a>
+
+        ${forumCategory(category_id)}
+      </td>
+      <td>
+        <div class="avatar-container">
+          ${avatars(posters, users)}
+        </div>
+      </td>
+      <td>${posts_count - 1}</td>
+      <td>${viewCount(views)}</td>
+      <td>${timeAgo(bumped_at)}</td>
+    </tr>`;
+  }).join("");
+};
+
