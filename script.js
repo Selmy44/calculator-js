@@ -1,134 +1,231 @@
-const forumLatest = "https://cdn.freecodecamp.org/curriculum/forum-latest/latest.json";
-const forumTopicUrl = "https://forum.freecodecamp.org/t/";
-const forumCategoryUrl = "https://forum.freecodecamp.org/c/";
-const avatarUrl = "https://sea1.discourse-cdn.com/freecodecamp";
+const listOfAllDice = document.querySelectorAll(".die");
+const scoreInputs = document.querySelectorAll("#score-options input");
+const scoreSpans = document.querySelectorAll("#score-options span");
+const roundElement = document.getElementById("current-round");
+const rollsElement = document.getElementById("current-round-rolls");
+const totalScoreElement = document.getElementById("total-score");
+const scoreHistory = document.getElementById("score-history");
+const rollDiceBtn = document.getElementById("roll-dice-btn");
+const keepScoreBtn = document.getElementById("keep-score-btn");
+const rulesContainer = document.querySelector(".rules-container");
+const rulesBtn = document.getElementById("rules-btn");
 
-const postsContainer = document.getElementById("posts-container");
+let diceValuesArr = [];
+let isModalShowing = false;
+let score = 0;
+let round = 1;
+let rolls = 0;
 
-const allCategories = {
-  299: { category: "Career Advice", className: "career" },
-  409: { category: "Project Feedback", className: "feedback" },
-  417: { category: "freeCodeCamp Support", className: "support" },
-  421: { category: "JavaScript", className: "javascript" },
-  423: { category: "HTML - CSS", className: "html-css" },
-  424: { category: "Python", className: "python" },
-  432: { category: "You Can Do This!", className: "motivation" },
-  560: { category: "Backend Development", className: "backend" },
+const rollDice = () => {
+  diceValuesArr = [];
+
+  for (let i = 0; i < 5; i++) {
+    const randomDice = Math.floor(Math.random() * 6) + 1;
+    diceValuesArr.push(randomDice);
+  };
+
+  listOfAllDice.forEach((dice, index) => {
+    dice.textContent = diceValuesArr[index];
+  });
 };
 
-const forumCategory = (id) => {
-  let selectedCategory = {};
+const updateStats = () => {
+  rollsElement.textContent = rolls;
+  roundElement.textContent = round;
+};
 
-  if (allCategories.hasOwnProperty(id)) {
-    const { className, category } = allCategories[id];
+const updateRadioOption = (index, score) => {
+  scoreInputs[index].disabled = false;
+  scoreInputs[index].value = score;
+  scoreSpans[index].textContent = `, score = ${score}`;
+};
 
-    selectedCategory.className = className;
-    selectedCategory.category = category;
+const updateScore = (selectedValue, achieved) => {
+  score += parseInt(selectedValue);
+  totalScoreElement.textContent = score;
+
+  scoreHistory.innerHTML += `<li>${achieved} : ${selectedValue}</li>`;
+};
+
+const getHighestDuplicates = (arr) => {
+  const counts = {};
+
+  for (const num of arr) {
+    if (counts[num]) {
+      counts[num]++;
+    } else {
+      counts[num] = 1;
+    }
+  }
+
+  let highestCount = 0;
+
+  for (const num of arr) {
+    const count = counts[num];
+    if (count >= 3 && count > highestCount) {
+      highestCount = count;
+    }
+    if (count >= 4 && count > highestCount) {
+      highestCount = count;
+    }
+  }
+
+  const sumOfAllDice = arr.reduce((a, b) => a + b, 0);
+
+  if (highestCount >= 4) {
+    updateRadioOption(1, sumOfAllDice);
+  }
+
+  if (highestCount >= 3) {
+    updateRadioOption(0, sumOfAllDice);
+  }
+
+  updateRadioOption(5, 0);
+};
+
+const detectFullHouse = (arr) => {
+  const counts = {};
+
+  for (const num of arr) {
+    counts[num] = counts[num] ? counts[num] + 1 : 1;
+  }
+
+  const hasThreeOfAKind = Object.values(counts).includes(3);
+  const hasPair = Object.values(counts).includes(2);
+
+  if (hasThreeOfAKind && hasPair) {
+    updateRadioOption(2, 25);
+  }
+
+  updateRadioOption(5, 0);
+};
+
+const resetRadioOptions = () => {
+  scoreInputs.forEach((input) => {
+    input.disabled = true;
+    input.checked = false;
+  });
+
+  scoreSpans.forEach((span) => {
+    span.textContent = "";
+  });
+};
+
+const resetGame = () => {
+  diceValuesArr = [0, 0, 0, 0, 0];
+  score = 0;
+  round = 1;
+  rolls = 0;
+
+  listOfAllDice.forEach((dice, index) => {
+    dice.textContent = diceValuesArr[index];
+  });
+
+  totalScoreElement.textContent = score;
+  scoreHistory.innerHTML = "";
+
+  rollsElement.textContent = rolls;
+  roundElement.textContent = round;
+
+  resetRadioOptions();
+};
+
+const checkForStraights = (arr) => {
+  // Remove duplicates and sort the dice values
+  const uniqueSorted = [...new Set(arr)].sort((a, b) => a - b);
+  
+  // Convert to a string for easy pattern matching
+  const strValues = uniqueSorted.join("");
+
+  // Define patterns for small and large straights
+  const smallStraights = ["1234", "2345", "3456"];
+  const largeStraights = ["12345", "23456"];
+
+  // Check for large straight first
+  if (largeStraights.some(straight => strValues.includes(straight))) {
+    updateRadioOption(4, 40); // 5th radio button (index 4) for large straight
+    updateRadioOption(3, 30); // 4th radio button (index 3) should also be enabled and set to 30
+    return;
+  }
+
+  // Check for small straight
+  if (smallStraights.some(straight => strValues.includes(straight))) {
+    updateRadioOption(3, 30); // 4th radio button (index 3) for small straight
+    return;
+  }
+
+  // If no straight is found, update last radio button (index 5) with 0
+  updateRadioOption(5, 0);
+};
+
+// Call checkForStraights when rolling dice
+rollDiceBtn.addEventListener("click", () => {
+  if (rolls === 3) {
+    alert("You have made three rolls this round. Please select a score.");
   } else {
-    selectedCategory.className = "general";
-    selectedCategory.category = "General";
-    selectedCategory.id = 1;
+    rolls++;
+    resetRadioOptions();
+    rollDice();
+    updateStats();
+    getHighestDuplicates(diceValuesArr);
+    detectFullHouse(diceValuesArr);
+    checkForStraights(diceValuesArr);
   }
-  const url = `${forumCategoryUrl}${selectedCategory.className}/${id}`;
-  const linkText = selectedCategory.category;
-  const linkClass = `category ${selectedCategory.className}`;
+});
 
-  return `<a href="${url}" class="${linkClass}" target="_blank">
-    ${linkText}
-  </a>`;
-};
 
-const timeAgo = (time) => {
-  const currentTime = new Date();
-  const lastPost = new Date(time);
+rollDiceBtn.addEventListener("click", () => {
+  if (rolls === 3) {
+    alert("You have made three rolls this round. Please select a score.");
+  } else {
+    rolls++;
+    resetRadioOptions();
+    rollDice();
+    updateStats();
+    getHighestDuplicates(diceValuesArr);
+    detectFullHouse(diceValuesArr);
+checkForStraights(diceValuesArr);
 
-  const timeDifference = currentTime - lastPost;
-  const msPerMinute = 1000 * 60;
+  }
+});
 
-  const minutesAgo = Math.floor(timeDifference / msPerMinute);
-  const hoursAgo = Math.floor(minutesAgo / 60);
-  const daysAgo = Math.floor(hoursAgo / 24);
+rulesBtn.addEventListener("click", () => {
+  isModalShowing = !isModalShowing;
 
-  if (minutesAgo < 60) {
-    return `${minutesAgo}m ago`;
+  if (isModalShowing) {
+    rulesBtn.textContent = "Hide rules";
+    rulesContainer.style.display = "block";
+  } else {
+    rulesBtn.textContent = "Show rules";
+    rulesContainer.style.display = "none";
+  }
+});
+
+keepScoreBtn.addEventListener("click", () => {
+  let selectedValue;
+  let achieved;
+
+  for (const radioButton of scoreInputs) {
+    if (radioButton.checked) {
+      selectedValue = radioButton.value;
+      achieved = radioButton.id;
+      break;
+    }
   }
 
-  if (hoursAgo < 24) {
-    return `${hoursAgo}h ago`;
+  if (selectedValue) {
+    rolls = 0;
+    round++;
+    updateStats();
+    resetRadioOptions();
+    updateScore(selectedValue, achieved);
+    if (round > 6) {
+      setTimeout(() => {
+        alert(`Game Over! Your total score is ${score}`);
+        resetGame();
+      }, 500);
+    }
+  } else {
+    alert("Please select an option or roll the dice");
   }
-
-  return `${daysAgo}d ago`;
-};
-
-const viewCount = (views) => {
-  const thousands = Math.floor(views / 1000);
-
-  if (views >= 1000) {
-    return `${thousands}k`;
-  }
-
-  return views;
-};
-
-const avatars = (posters, users) => {
-  return posters
-    .map((poster) => {
-      const user = users.find((user) => user.id === poster.user_id);
-      if (user) {
-        const avatar = user.avatar_template.replace(/{size}/, 30);
-        const userAvatarUrl = avatar.startsWith("/user_avatar/")
-          ? avatarUrl.concat(avatar)
-          : avatar;
-        return `<img src="${userAvatarUrl}" alt="${user.name}" />`;
-      }
-    })
-    .join("");
-};
-
-const fetchData = async () => {
-  try {
-    const res = await fetch(forumLatest);
-    const data = await res.json();
-    showLatestPosts(data);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-fetchData();
-
-const showLatestPosts = (data) => {
-  const { topic_list, users } = data;
-  const { topics } = topic_list;
-
-  postsContainer.innerHTML = topics.map((item) => {
-    const {
-      id,
-      title,
-      views,
-      posts_count,
-      slug,
-      posters,
-      category_id,
-      bumped_at,
-    } = item;
-
-    return `
-    <tr>
-      <td>
-        <a class="post-title">${title}</a>
-
-        ${forumCategory(category_id)}
-      </td>
-      <td>
-        <div class="avatar-container">
-          ${avatars(posters, users)}
-        </div>
-      </td>
-      <td>${posts_count - 1}</td>
-      <td>${viewCount(views)}</td>
-      <td>${timeAgo(bumped_at)}</td>
-    </tr>`;
-  }).join("");
-};
-
+});
