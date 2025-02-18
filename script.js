@@ -17,7 +17,7 @@ const products = [
     price: 12.99,
     category: "Cupcake",
   },
-  
+
   {
     id: 2,
     name: "French Macaron",
