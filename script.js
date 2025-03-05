@@ -1,21 +1,32 @@
-const checkPalindrome = () => {
-    const inputElement = document.getElementById('text-input');
-    const resultElement = document.getElementById('result');
-    const text = inputElement.value.trim();
-
-    if (!text) {
-        alert('Please input a value');
+document.getElementById("check-btn").addEventListener("click", function () {
+    const userInput = document.getElementById("user-input").value;
+    const resultsDiv = document.getElementById("results-div");
+  
+    if (userInput === '') {
+        alert('Please provide a phone number');
         return;
-    }
+      }
 
-    const processedText = text.toLowerCase().replace(/[^a-z0-9]/g, '');
-    const reversedText = processedText.split('').reverse().join('');
-
-    if (processedText === reversedText) {
-        resultElement.textContent = `${text} is a palindrome`;
+    if (isValidUSPhoneNumber(userInput)) {
+      resultsDiv.textContent = `Valid US number: ${userInput}`;
     } else {
-        resultElement.textContent = `${text} is not a palindrome`;
+      resultsDiv.textContent = `Invalid US number: ${userInput}`;
     }
-};
-
-document.getElementById('check-btn').addEventListener('click', checkPalindrome);
+  });
+  
+  function isValidUSPhoneNumber(number) {
+    number = number.trim();
+  
+    const usPhoneRegex = /^(1\s?)?(\(\d{3}\)|\d{3})[-\s]?\d{3}[-\s]?\d{4}$/;
+  
+    if ((number.includes("(") && !number.includes(")")) || (number.includes(")") && !number.includes("("))) {
+      return false;
+    }
+  
+    return usPhoneRegex.test(number);
+  }
+  
+  document.getElementById('clear-btn').addEventListener('click', function() {
+    document.getElementById('results-div').textContent = '';
+  });
+  
