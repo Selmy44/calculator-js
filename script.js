@@ -1,108 +1,82 @@
-document.getElementById("search-button").addEventListener("click", async () => {
-    const searchInput = document.getElementById("search-input");
-    const query = searchInput.value.trim();
-  
-    // Clear previous data
-    clearData();
-  
-    // Step 14: If the input is "Red", show an alert
-    if (query === "Red") {
-      alert("Pokémon not found");
-      return;
+let price = 1.87;
+let cid = [
+    ['PENNY', 1.01],
+    ['NICKEL', 2.05],
+    ['DIME', 3.1],
+    ['QUARTER', 4.25],
+    ['ONE', 90],
+    ['FIVE', 55],
+    ['TEN', 20],
+    ['TWENTY', 60],
+    ['ONE HUNDRED', 100]
+];
+
+const currencyUnit = {
+    "PENNY": 0.01,
+    "NICKEL": 0.05,
+    "DIME": 0.1,
+    "QUARTER": 0.25,
+    "ONE": 1,
+    "FIVE": 5,
+    "TEN": 10,
+    "TWENTY": 20,
+    "ONE HUNDRED": 100
+};
+
+document.getElementById("purchase-btn").addEventListener("click", function () {
+    let cash = parseFloat(document.getElementById("cash").value);
+    let changeDue = cash - price;
+    
+    if (cash < price) {
+        alert("Customer does not have enough money to purchase the item");
+        return;
+    } 
+    
+    if (cash === price) {
+        document.getElementById("change-due").innerText = "No change due - customer paid with exact cash";
+        return;
     }
-  
-    try {
-      // Use the freeCodeCamp PokéAPI Proxy (here we use the standard PokéAPI)
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${query.toLowerCase()}`);
-      
-      if (!response.ok) {
-        throw new Error("Pokémon not found");
-      }
-      
-      const data = await response.json();
-  
-      // Populate Pokémon details
-  
-      // Name in uppercase
-      document.getElementById("pokemon-name").textContent = data.name.toUpperCase();
-  
-      // Pokémon id. You can choose to include a "#" or not.
-      document.getElementById("pokemon-id").textContent = "#" + data.id;
-  
-      // Weight and height with labels (if you prefer just the number, you can remove the labels)
-      document.getElementById("weight").textContent = "Weight: " + data.weight;
-      document.getElementById("height").textContent = "Height: " + data.height;
-  
-      // Stats (hp, attack, defense, special-attack, special-defense, speed)
-      data.stats.forEach((stat) => {
-        switch (stat.stat.name) {
-          case "hp":
-            document.getElementById("hp").textContent = stat.base_stat;
-            break;
-          case "attack":
-            document.getElementById("attack").textContent = stat.base_stat;
-            break;
-          case "defense":
-            document.getElementById("defense").textContent = stat.base_stat;
-            break;
-          case "special-attack":
-            document.getElementById("special-attack").textContent = stat.base_stat;
-            break;
-          case "special-defense":
-            document.getElementById("special-defense").textContent = stat.base_stat;
-            break;
-          case "speed":
-            document.getElementById("speed").textContent = stat.base_stat;
-            break;
+
+    let totalCID = cid.reduce((sum, [_, amount]) => sum + amount, 0);
+    totalCID = parseFloat(totalCID.toFixed(2));
+
+    if (totalCID < changeDue) {
+        document.getElementById("change-due").innerText = "Status: INSUFFICIENT_FUNDS";
+        return;
+    }
+
+    let changeArray = [];
+    let remainingChange = changeDue;
+
+    for (let i = cid.length - 1; i >= 0; i--) {
+        let [unit, amount] = cid[i];
+        let unitValue = currencyUnit[unit];
+        let amountToGive = 0;
+
+        while (remainingChange >= unitValue && amount > 0) {
+            remainingChange -= unitValue;
+            amount -= unitValue;
+            amountToGive += unitValue;
+            remainingChange = parseFloat(remainingChange.toFixed(2));
         }
-      });
-  
-      // Clear the types element first (Step 17 & 20)
-      const typesContainer = document.getElementById("types");
-      typesContainer.innerHTML = "";
-      // Add one or more type elements based on the Pokémon's types
-      data.types.forEach((typeInfo) => {
-        const typeSpan = document.createElement("span");
-        typeSpan.textContent = typeInfo.type.name.toUpperCase();
-        typesContainer.appendChild(typeSpan);
-      });
-  
-      // Add the sprite image (Step 16 & 19)
-      // First remove any existing sprite if present
-      const existingSprite = document.getElementById("sprite");
-      if (existingSprite) {
-        existingSprite.remove();
-      }
-      const spriteContainer = document.getElementById("sprite-container");
-      const spriteImg = document.createElement("img");
-      spriteImg.id = "sprite";
-      spriteImg.src = data.sprites.front_default;
-      spriteImg.alt = data.name + " sprite";
-      spriteContainer.appendChild(spriteImg);
-    } catch (error) {
-      // For any errors (e.g., Pokémon not found), show an alert
-      alert("Pokémon not found");
+
+        if (amountToGive > 0) {
+            changeArray.push([unit, parseFloat(amountToGive.toFixed(2))]);
+        }
     }
-  });
-  
-  // Helper function to clear previous search data
-  function clearData() {
-    document.getElementById("pokemon-name").textContent = "";
-    document.getElementById("pokemon-id").textContent = "";
-    document.getElementById("weight").textContent = "";
-    document.getElementById("height").textContent = "";
-    document.getElementById("hp").textContent = "";
-    document.getElementById("attack").textContent = "";
-    document.getElementById("defense").textContent = "";
-    document.getElementById("special-attack").textContent = "";
-    document.getElementById("special-defense").textContent = "";
-    document.getElementById("speed").textContent = "";
-    document.getElementById("types").innerHTML = "";
-  
-    // Remove existing sprite image if it exists
-    const existingSprite = document.getElementById("sprite");
-    if (existingSprite) {
-      existingSprite.remove();
+
+    let totalChangeGiven = changeArray.reduce((sum, [_, amount]) => sum + amount, 0);
+    totalChangeGiven = parseFloat(totalChangeGiven.toFixed(2));
+
+    if (totalChangeGiven < changeDue) {
+        document.getElementById("change-due").innerText = "Status: INSUFFICIENT_FUNDS";
+        return;
     }
-  }
-  
+
+    if (totalChangeGiven === totalCID) {
+        document.getElementById("change-due").innerText = `Status: CLOSED ${changeArray.map(([unit, amount]) => `${unit}: $${amount}`).join(" ")}`;
+        return;
+    }
+
+document.getElementById("change-due").innerText = `Status: OPEN ${changeArray.map(([unit, amount]) => `${unit}: $${amount}`).join(" ")}`;
+});
