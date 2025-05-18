@@ -1,31 +1,8 @@
-function add() {
-      var num1 = parseFloat(document.getElementById('num1').value);
-      var num2 = parseFloat(document.getElementById('num2').value);
-      var result = num1 + num2;
-      document.getElementById('result').innerHTML = 'Result: ' + result;
-    }
+# React + Vite
 
-    function subtract() {
-      var num1 = parseFloat(document.getElementById('num1').value);
-      var num2 = parseFloat(document.getElementById('num2').value);
-      var result = num1 - num2;
-      document.getElementById('result').innerHTML = 'Result: ' + result;
-    }
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-    function multiply() {
-      var num1 = parseFloat(document.getElementById('num1').value);
-      var num2 = parseFloat(document.getElementById('num2').value);
-      var result = num1 * num2;
-      document.getElementById('result').innerHTML = 'Result: ' + result;
-    }
+Currently, two official plugins are available:
 
-    function divide() {
-      var num1 = parseFloat(document.getElementById('num1').value);
-      var num2 = parseFloat(document.getElementById('num2').value);
-      if (num2 === 0) {
-        document.getElementById('result').innerHTML = 'Cannot divide by zero';
-      } else {
-        var result = num1 / num2;
-        document.getElementById('result').innerHTML = 'Result: ' + result;
-      }
-    }
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
