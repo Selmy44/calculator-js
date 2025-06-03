@@ -1,5 +1,9 @@
 {
   "dependencies": {
-    "dotenv": "^16.5.0"
+    "docxtemplater": "^3.49.1",
+    "file-saver": "^2.0.5",
+    "firebase": "^10.9.0",
+    "pizzip": "^3.1.7",
+    "react-doc-viewer": "^0.1.13"
   }
 }
