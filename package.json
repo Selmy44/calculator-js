@@ -7,3 +7,8 @@
     "react-doc-viewer": "^0.1.13"
   }
 }
+
+"scripts": {
+  "dev": "webpack serve --mode development"
+}
+
