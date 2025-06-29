@@ -1,14 +1,30 @@
 {
+  "name": "my-react-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "start": "react-run-scripts"
+  },
   "dependencies": {
-    "docxtemplater": "^3.49.1",
-    "file-saver": "^2.0.5",
-    "firebase": "^10.9.0",
-    "pizzip": "^3.1.7",
-    "react-doc-viewer": "^0.1.13"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.19.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.18",
+    "globals": "^15.14.0",
+    "vite": "^6.1.0"
   }
+  
 }
-
-"scripts": {
-  "dev": "webpack serve --mode development"
-}
-
