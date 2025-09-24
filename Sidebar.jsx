@@ -26,7 +26,7 @@ function Sidebar({ isOpen }) {
           <li><NavLink to="/Cash" className={({ isActive }) => isActive ? 'sidebar-link active' : 'sidebar-link'}>Cash</NavLink></li>
         </ul>
 
-      4  <div className="sidebar-divider" />
+        <div className="sidebar-divider" />
         <ul className="sidebar-section-bottom" style={{ marginTop: '2px', marginBottom: '0' }}>
           <li><span className="sidebar-icon">⚙️</span> Preferences <span className="sidebar-arrow">{'›'}</span></li>
           {/* <li><span className="sidebar-icon">👤</span> My profile <span className="sidebar-arrow">{'›'}</span></li> */}
